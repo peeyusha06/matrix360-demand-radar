@@ -1,0 +1,380 @@
+<title>Demand Radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column of signal cards, grouped by client, with a filter row; flow + market sections below. */
+:root {
+  --bg: #f5f7f8;
+  --surface: #ffffff;
+  --ink: #15212b;
+  --muted: #5a6a76;
+  --line: #dde3e7;
+  --accent: #0e6a86;
+  --accent-soft: #e2f0f4;
+  --good: #1f7a4d;
+  --good-soft: #e3f3ea;
+  --warn: #9a6400;
+  --warn-soft: #fbf0d9;
+  --bad: #a3392d;
+  --bad-soft: #f8e4e1;
+  --chip: #eef2f4;
+  --ind: #36577a;
+  --res: #7a4c8f;
+  --plot: #3f7a3a;
+  --comp: #8a4b2a;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f161c; --surface: #16212a; --ink: #e6edf1; --muted: #9aabb6; --line: #2a3843;
+    --accent: #5fb8d3; --accent-soft: #15323d; --good: #6fcf9b; --good-soft: #163327;
+    --warn: #e7b558; --warn-soft: #3a2e14; --bad: #ef8a7c; --bad-soft: #3d1f1b; --chip: #1e2b35;
+    --ind: #8fb3d9; --res: #c7a2db; --plot: #93cc8c; --comp: #e0a27e; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f161c; --surface: #16212a; --ink: #e6edf1; --muted: #9aabb6; --line: #2a3843;
+  --accent: #5fb8d3; --accent-soft: #15323d; --good: #6fcf9b; --good-soft: #163327;
+  --warn: #e7b558; --warn-soft: #3a2e14; --bad: #ef8a7c; --bad-soft: #3d1f1b; --chip: #1e2b35;
+  --ind: #8fb3d9; --res: #c7a2db; --plot: #93cc8c; --comp: #e0a27e; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 64px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.1rem, 6vw, 3rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+h2 { font-size: 1.35rem; font-weight: 700; }
+h3 { font-size: 1.15rem; font-weight: 700; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* header */
+header { display: grid; gap: 14px; }
+.lede { font-size: 1.12rem; color: var(--ink); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+
+/* how to read */
+.howto { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.howto div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 4px; }
+.howto strong { font-family: var(--display); font-weight: 700; }
+.howto span { color: var(--muted); font-size: 0.92rem; }
+
+/* filters */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filters button { font: 500 0.88rem var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* cards */
+.list { display: grid; gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
+.card-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.client { font: 600 0.78rem var(--mono); letter-spacing: 0.04em; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; border: 1px solid currentColor; }
+.client.ind { color: var(--ind); } .client.res { color: var(--res); } .client.plot { color: var(--plot); } .client.comp { color: var(--comp); }
+.priority { font: 600 0.8rem var(--body); padding: 3px 10px; border-radius: 999px; }
+.priority.high { background: var(--good-soft); color: var(--good); }
+.priority.research { background: var(--warn-soft); color: var(--warn); }
+.priority.watch { background: var(--bad-soft); color: var(--bad); }
+.who { display: grid; gap: 2px; }
+.who .sub { color: var(--muted); font-size: 0.92rem; }
+.rows { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; }
+.row > .label { padding-top: 3px; }
+.row > div { min-width: 0; }
+@media (max-width: 560px) { .row { grid-template-columns: 1fr; gap: 2px; } }
+.checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.check { font-size: 0.82rem; padding: 2px 9px; border-radius: 4px; background: var(--chip); }
+.check.yes::before { content: "✓ "; color: var(--good); font-weight: 600; }
+.check.no::before { content: "✗ "; color: var(--bad); font-weight: 600; }
+.sources { display: grid; gap: 3px; font-size: 0.9rem; }
+.sources a { overflow-wrap: anywhere; }
+.sources .date { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+.draft { background: var(--accent-soft); border-radius: 8px; padding: 14px; display: grid; gap: 10px; }
+.draft p { font-size: 0.95rem; }
+.draft-foot { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.draft-foot .label { color: var(--muted); }
+.copy { font: 500 0.82rem var(--body); border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 6px; padding: 4px 12px; cursor: pointer; }
+.nodraft { font-size: 0.9rem; color: var(--muted); font-style: italic; }
+
+/* flow */
+.flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.step { padding: 14px; display: grid; gap: 4px; align-content: start; border-right: 1px solid var(--line); position: relative; }
+.step:last-child { border-right: 0; }
+.step strong { font-family: var(--display); font-size: 0.98rem; }
+.step span { font-size: 0.86rem; color: var(--muted); }
+.step.me { background: var(--accent-soft); }
+.step.me strong { color: var(--accent); }
+@media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .step { border-right: 0; border-bottom: 1px solid var(--line); } .step:last-child { border-bottom: 0; } }
+
+/* market table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.92rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 0.72rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+.when { font-weight: 600; }
+.when.after { color: var(--muted); }
+.when.before { color: var(--good); }
+.gap { font-size: 1.02rem; padding: 14px 16px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 8px 8px 0; }
+
+/* today / next */
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.two div { display: grid; gap: 8px; align-content: start; }
+.two ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+section { display: grid; gap: 14px; }
+footer { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: opacity .15s; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="label">Matrix360 · Lead generation · Prototype</span>
+  <h1>Demand Radar</h1>
+  <p class="lede">Who is likely to need property soon, and the public proof. Most tools wait for a buyer to enquire. This one looks for the reason someone will buy before they start searching.</p>
+  <div class="meta">
+    <span>Collected <b>12 Oct 2026</b></span>
+    <span><b>7</b> signals</span>
+    <span><b>3</b> clients</span>
+    <span>Every claim links to its source</span>
+  </div>
+</header>
+
+<section aria-labelledby="howto-h">
+  <h2 id="howto-h">How to read a signal</h2>
+  <div class="howto">
+    <div><strong>What happened</strong><span>A real event: an IPO, a factory expansion, a hiring drive.</span></div>
+    <div><strong>Why it matters</strong><span>Which client it helps, and why this person or company may need property.</span></div>
+    <div><strong>Three checks</strong><span>Fits the product · Recent (last 4 months) · Company named. More ticks means act sooner.</span></div>
+    <div><strong>First message</strong><span>A draft that opens with the real reason. A person checks it and sends it.</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="signals-h">
+  <h2 id="signals-h">Signals</h2>
+  <div class="filters" role="group" aria-label="Filter by client">
+    <button type="button" id="f-all" data-f="all" aria-pressed="true">All</button>
+    <button type="button" id="f-ind" data-f="ind" aria-pressed="false">Lakhotia Industrial</button>
+    <button type="button" id="f-res" data-f="res" aria-pressed="false">Shree Heights</button>
+    <button type="button" id="f-plot" data-f="plot" aria-pressed="false">Vrindavan Greens</button>
+    <button type="button" id="f-comp" data-f="comp" aria-pressed="false">Competitors</button>
+  </div>
+
+  <div class="list" id="list">
+
+    <!-- 1 -->
+    <article class="card" data-c="ind">
+      <div class="card-top"><span class="client ind">Lakhotia Industrial</span><span class="priority high">Act now</span></div>
+      <div class="who"><h3>Injecto Polymers</h3><span class="sub">Plastic packaging maker · Kolkata, with a facility in Howrah</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What happened</span><div>Raised ₹56.12 crore in an SME IPO (bidding 11–16 Sep 2026). The money funds a <b>Phase IV expansion of 4,800 MT a year</b>, taking total capacity to 18,070 MT.</div></div>
+        <div class="row"><span class="label">Why it matters</span><div>Lakhotia's own website names plastics and packaging as the highest-demand segment in the Howrah belt. A company that just raised money to grow capacity may need more land.</div></div>
+        <div class="row"><span class="label">Checks</span><div class="checks"><span class="check yes">Fits the product</span><span class="check yes">Recent</span><span class="check yes">Company named</span></div></div>
+        <div class="row"><span class="label">Check before calling</span><div>Where Phase IV will be built. The IPO prospectus says.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://www.chittorgarh.com/ipo/injecto-polymers-ipo/2625/" target="_blank" rel="noopener">Chittorgarh: Injecto Polymers IPO details</a>
+          <a href="https://www.sustainabilitymea.com/injecto-polymers-us6-7m-ipo-opens-sept-11-to-fund-packaging-expansion/" target="_blank" rel="noopener">Sustainability MEA: IPO to fund packaging expansion</a>
+        </div></div>
+      </div>
+      <div class="draft">
+        <span class="label">First message · to the promoter or MD</span>
+        <p>Hi {first_name}, congratulations on the IPO. I read that Phase IV adds 4,800 MT a year. If you're still deciding where that capacity goes, Lakhotia Industrial Complex in Howrah has freehold plots from 1 acre. Happy to share the layout.</p>
+        <div class="draft-foot"><span class="label">235 / 300 characters · needs a person's OK</span><button type="button" class="copy">Copy</button></div>
+      </div>
+    </article>
+
+    <!-- 2 -->
+    <article class="card" data-c="ind">
+      <div class="card-top"><span class="client ind">Lakhotia Industrial</span><span class="priority high">Act now</span></div>
+      <div class="who"><h3>Sotefin Bharat</h3><span class="sub">Automated car parking systems · Kolkata · part of Switzerland's Sotefin SA</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What happened</span><div>SME IPO of ₹89.76 crore, open 16–20 July 2026. The stated use of the money includes <b>"setting up a manufacturing facility in Kolkata, West Bengal"</b>.</div></div>
+        <div class="row"><span class="label">Why it matters</span><div>They have said in public that they are building a factory. Engineering units fit Lakhotia's 1–3 acre plots. If the land isn't fixed yet, this is the moment.</div></div>
+        <div class="row"><span class="label">Checks</span><div class="checks"><span class="check yes">Fits the product</span><span class="check yes">Recent</span><span class="check yes">Company named</span></div></div>
+        <div class="row"><span class="label">Check before calling</span><div>Whether land for the facility is already bought. The prospectus lists it.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://www.deccanchronicle.com/business/market/sotefin-bharat-sme-ipo-from-july-16-1971044" target="_blank" rel="noopener">Deccan Chronicle: Sotefin Bharat SME IPO from July 16</a><span class="date">15 Jul 2026</span>
+          <a href="https://www.sotefinbharat.com/wp-content/uploads/2026/07/Sotefin_Bharat_RHP-Final.pdf" target="_blank" rel="noopener">Sotefin Bharat: Red Herring Prospectus (PDF)</a>
+        </div></div>
+      </div>
+      <div class="draft">
+        <span class="label">First message · to the MD or head of operations</span>
+        <p>Hi {first_name}, saw that Sotefin Bharat plans a new manufacturing facility in Kolkata after the IPO. If the site isn't final yet, Lakhotia Industrial Complex on Ranihati–Amta Road has freehold plots and helps with approvals. Worth a quick look?</p>
+        <div class="draft-foot"><span class="label">247 / 300 characters · needs a person's OK</span><button type="button" class="copy">Copy</button></div>
+      </div>
+    </article>
+
+    <!-- 3 -->
+    <article class="card" data-c="res">
+      <div class="card-top"><span class="client res">Shree Heights</span><span class="priority high">Act now</span></div>
+      <div class="who"><h3>Lux Industries (Lux Cozi)</h3><span class="sub">Innerwear and garments · new plant at Dankuni, Hooghly district</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What happened</span><div>Foundation stone laid on 11 July 2026 for a <b>₹600 crore expansion</b> at Dankuni: 12 lakh sq ft added, 20 lakh sq ft in total. Expected <b>3,000 direct and 6,000 indirect jobs</b>.</div></div>
+        <div class="row"><span class="label">Why it matters</span><div>Managers and staff moving for this plant will need homes. Shree Heights is in Chandannagar, in the same district. One tie-up with their HR team can reach many buyers at once.</div></div>
+        <div class="row"><span class="label">Checks</span><div class="checks"><span class="check yes">Fits the product</span><span class="check yes">Recent</span><span class="check yes">Company named</span></div></div>
+        <div class="row"><span class="label">Check before calling</span><div>When the plant opens and how many staff will relocate. Also useful for Lakhotia: suppliers may look for space nearby.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://www.financialexpress.com/india-news/rs-600-crore-game-changer-bengal-cm-suvendu-adhikari-unveils-20-lakh-sq-ft-mega-garment-hub-lux-cozi-plant-in-hooghly-9000-jobs-expected/4289315/" target="_blank" rel="noopener">Financial Express: ₹600 crore garment hub in Hooghly, 9,000 jobs expected</a><span class="date">12 Jul 2026</span>
+        </div></div>
+      </div>
+      <div class="draft">
+        <span class="label">First message · to the HR head</span>
+        <p>Hi {first_name}, read about the Dankuni expansion and the 3,000 new jobs. Shree Heights in Chandannagar has 2 and 3BHK homes that are almost ready. Would a home-buying offer for your Hooghly team be useful? Happy to set it up.</p>
+        <div class="draft-foot"><span class="label">226 / 300 characters · needs a person's OK</span><button type="button" class="copy">Copy</button></div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="card" data-c="plot">
+      <div class="card-top"><span class="client plot">Vrindavan Greens</span><span class="priority high">Act now</span></div>
+      <div class="who"><h3>AIIMS Kalyani: 34 new faculty</h3><span class="sub">Doctors and professors joining a hospital 15 minutes from the plots</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What happened</span><div>AIIMS Kalyani notified <b>34 faculty posts</b>: 10 Professor, 4 Additional Professor, 1 Associate Professor, 19 Assistant Professor. Applications closed on 26 July 2026.</div></div>
+        <div class="row"><span class="label">Why it matters</span><div>New senior doctors join over the coming months, and many move from other cities. Vrindavan Greens' website lists AIIMS Kalyani as 15 minutes away. Plots suit people who want to build their own house.</div></div>
+        <div class="row"><span class="label">Checks</span><div class="checks"><span class="check yes">Fits the product</span><span class="check yes">Recent</span><span class="check yes">Official notice</span></div></div>
+        <div class="row"><span class="label">How to find them</span><div>On LinkedIn, people who recently started at AIIMS Kalyani. Also ask the hospital's staff welfare office about a housing notice board.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://aiimskalyani.edu.in/aiimsapi/uploads/documents/general/2nd_cut_off_notification_final_20260710_183947_92802623.pdf" target="_blank" rel="noopener">AIIMS Kalyani: faculty vacancy notification, 2nd cut-off (PDF)</a><span class="date">10 Jul 2026</span>
+        </div></div>
+      </div>
+      <div class="draft">
+        <span class="label">First message · to a doctor who just joined</span>
+        <p>Hi Dr {last_name}, congratulations on joining AIIMS Kalyani. If you're looking for a home nearby, Vrindavan Greens is a gated plotted community 15 minutes away at Madanpur. You buy the land and build your own house. Can I send the plot map?</p>
+        <div class="draft-foot"><span class="label">240 / 300 characters · needs a person's OK</span><button type="button" class="copy">Copy</button></div>
+      </div>
+    </article>
+
+    <!-- 5 -->
+    <article class="card" data-c="ind">
+      <div class="card-top"><span class="client ind">Lakhotia Industrial</span><span class="priority research">Find the name first</span></div>
+      <div class="who"><h3>Beverage maker expanding in Taratala</h3><span class="sub">Bottled water, juices and canned soft drinks · Taratala, Kolkata</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What happened</span><div>Expansion of an existing plant, <b>₹64.16 crore</b> investment. Planned output: 10,440 KL a month of bottled water, 829 KL of boxed juice, 2,808 KL of canned soft drinks.</div></div>
+        <div class="row"><span class="label">Why it matters</span><div>A fast-growing drinks plant inside the city runs out of room for storage and dispatch. Lakhotia's 3–6 acre plots suit a warehouse or a second unit.</div></div>
+        <div class="row"><span class="label">Checks</span><div class="checks"><span class="check yes">Fits the product</span><span class="check yes">Recent</span><span class="check no">Company named</span></div></div>
+        <div class="row"><span class="label">Next step</span><div>The tracker hides the company name on its free page. Look it up in pollution board or environmental clearance records.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://www.newprojectstracker.net/projects-india/west-bengal" target="_blank" rel="noopener">New Projects Tracker: West Bengal</a><span class="date">Updated 30 Jun 2026</span>
+        </div></div>
+      </div>
+      <p class="nodraft">No message yet. We don't write to a company we can't name.</p>
+    </article>
+
+    <!-- 6 -->
+    <article class="card" data-c="comp">
+      <div class="card-top"><span class="client comp">Competitor · Lakhotia</span><span class="priority watch">Watch</span></div>
+      <div class="who"><h3>WBIDC Uluberia Industrial Park</h3><span class="sub">State-run industrial park · Uluberia, Howrah · on NH-6</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What it is</span><div>A government industrial park in the same district and on the same highway. WBIDC has possession of <b>128.69 acres</b>.</div></div>
+        <div class="row"><span class="label">What it means</span><div>Buyers will compare. Lakhotia's pitch should lead with what a state park doesn't offer: freehold ownership, free plot-size advice and help with approvals.</div></div>
+        <div class="row"><span class="label">Check</span><div>Whether Uluberia plots are leasehold. If they are, freehold is Lakhotia's clearest difference.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://www.wbidc.com/home/industrial-parks/uluberia-industrial-park" target="_blank" rel="noopener">WBIDC: Uluberia Industrial Park</a>
+        </div></div>
+      </div>
+    </article>
+
+    <!-- 7 -->
+    <article class="card" data-c="comp">
+      <div class="card-top"><span class="client comp">Competitor · Lakhotia</span><span class="priority watch">Watch</span></div>
+      <div class="who"><h3>New MSME industrial park in Howrah</h3><span class="sub">Industrial park plus warehouse · 8.76 acres · Howrah</span></div>
+      <div class="rows">
+        <div class="row"><span class="label">What it is</span><div>An infrastructure firm is building an MSME industrial park and warehouse on 8.76 acres in Howrah. Investment of <b>₹14.63 crore</b>.</div></div>
+        <div class="row"><span class="label">What it means</span><div>A smaller park competing for the same SME buyers. Lakhotia's bigger plots (up to 6+ acres) and planned roads are the difference to lead with.</div></div>
+        <div class="row"><span class="label">Next step</span><div>Find the developer's name and location.</div></div>
+        <div class="row"><span class="label">Proof</span><div class="sources">
+          <a href="https://www.newprojectstracker.net/projects-india/west-bengal" target="_blank" rel="noopener">New Projects Tracker: West Bengal</a><span class="date">Updated 3 Jul 2026</span>
+        </div></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section aria-labelledby="flow-h">
+  <h2 id="flow-h">Where it fits in the product</h2>
+  <p>Demand Radar is the first step. Everything the team built today can take its output.</p>
+  <div class="flow">
+    <div class="step me"><span class="label">1 · Find</span><strong>Demand Radar</strong><span>Who needs property now, and the proof</span></div>
+    <div class="step"><span class="label">2 · Qualify</span><strong>Lead scoring</strong><span>Pratha, Rishabh, Mayur</span></div>
+    <div class="step me"><span class="label">3 · Reach out</span><strong>First message</strong><span>Opens with the real reason. A person sends it.</span></div>
+    <div class="step"><span class="label">4 · Engage</span><strong>Chat, WhatsApp, landing pages</strong><span>Tanmay, Avinash, Aditya, Shalini</span></div>
+    <div class="step"><span class="label">5 · Close</span><strong>Site visit</strong><span>Client's sales team</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="market-h">
+  <h2 id="market-h">What the market already does</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tool</th><th>Starts working</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://www.sell.do/blog/best-real-estate-crm-software-for-agents-in-india" target="_blank" rel="noopener">Sell.Do</a> (India)</td><td class="when after">After an enquiry</td><td>Collects leads from portals, ads and WhatsApp. AI scores them, replies and books site visits.</td></tr>
+        <tr><td><a href="https://www.leadsquared.com/industries/real-estate/real-estate-crm-and-lead-generation/" target="_blank" rel="noopener">LeadSquared</a> (India)</td><td class="when after">After an enquiry</td><td>CRM linked to portals like 99acres. Tracks which source brings leads.</td></tr>
+        <tr><td><a href="https://www.housingwire.com/articles/top-real-estate-lead-generation-companies/" target="_blank" rel="noopener">SmartZip</a> (US)</td><td class="when before">Before</td><td>Predicts which homeowners will sell, 6 to 12 months early.</td></tr>
+        <tr><td><a href="https://pipeline.zoominfo.com/sales/intent-data-platform" target="_blank" rel="noopener">ZoomInfo</a>, Bombora (B2B)</td><td class="when before">Before</td><td>"Intent data": signs that a company is about to buy something.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="gap">The Indian real estate tools we found all start after a buyer enquires. Finding buyers before they search exists abroad, but not for Indian developers. That is the gap Demand Radar fills.</p>
+</section>
+
+<section aria-labelledby="next-h">
+  <h2 id="next-h">What's real today, what comes next</h2>
+  <div class="two">
+    <div>
+      <span class="label">Today</span>
+      <ul>
+        <li>An AI research agent found these 7 signals in one run, across news, IPO filings, government sites and project trackers.</li>
+        <li>Each fact was checked against its source before going on this page.</li>
+        <li>Messages are drafts. A person checks every one before it goes out.</li>
+      </ul>
+    </div>
+    <div>
+      <span class="label">Next</span>
+      <ul>
+        <li>Run the radar every day on a schedule.</li>
+        <li>Send each new signal straight into the lead scoring tools.</li>
+        <li>Add more sources: new company registrations, environmental clearances, job posts.</li>
+        <li>A signal is a reason to reach out, not proof someone will buy.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>Prepared by Peeyusha Patki, Matrix360 · 12 Oct 2026 · Sources checked on the day of collection.</footer>
+</div>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.filters button');
+  var cards = document.querySelectorAll('#list .card');
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-f');
+      buttons.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      cards.forEach(function (c) { c.hidden = !(f === 'all' || c.getAttribute('data-c') === f); });
+    });
+  });
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.closest('.draft').querySelector('p').textContent;
+      var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+      try {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(btn); });
+      } catch (e) { selectText(btn); }
+    });
+  });
+  function selectText(btn) {
+    var p = btn.closest('.draft').querySelector('p');
+    var r = document.createRange(); r.selectNodeContents(p);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    btn.textContent = 'Selected, press Ctrl+C';
+  }
+})();
+</script>

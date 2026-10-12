@@ -1,0 +1,121 @@
+{
+  "collected_on": "2026-10-12",
+  "collected_by": "Peeyusha Patki (Demand Radar)",
+  "note": "Every fact below was checked against its source on the collection date. Contacts are official public company contacts, not personal data.",
+  "signals": [
+    {
+      "id": "injecto-polymers-ipo-2026",
+      "kind": "lead",
+      "client": "Lakhotia",
+      "property_type": "industrial",
+      "lead_type": "company",
+      "industry": "manufacturing",
+      "company": "Injecto Polymers Ltd",
+      "contact_name": "Contact to identify (promoter or MD)",
+      "email": "cs@injectopolymers.in",
+      "phone": "033 22378167",
+      "linkedin_url": null,
+      "what_happened": "Kolkata plastic packaging maker with a Howrah facility raised Rs 56.12 crore in an SME IPO (bidding 11-16 Sep 2026). Proceeds fund a Phase IV expansion of 4,800 MT a year, taking capacity to 18,070 MT.",
+      "why_it_matters": "Lakhotia's website names plastics and packaging as the highest-demand segment in the Howrah belt. A company that just raised money to grow capacity may need more land.",
+      "check_before_contact": "Where Phase IV will be built (see the prospectus).",
+      "sources": [
+        "https://www.chittorgarh.com/ipo/injecto-polymers-ipo/2625/",
+        "https://www.sustainabilitymea.com/injecto-polymers-us6-7m-ipo-opens-sept-11-to-fund-packaging-expansion/",
+        "https://injectopolymers.in/contacts/"
+      ],
+      "first_message": "Hi {first_name}, congratulations on the IPO. I read that Phase IV adds 4,800 MT a year. If you're still deciding where that capacity goes, Lakhotia Industrial Complex in Howrah has freehold plots from 1 acre. Happy to share the layout."
+    },
+    {
+      "id": "sotefin-bharat-ipo-2026",
+      "kind": "lead",
+      "client": "Lakhotia",
+      "property_type": "industrial",
+      "lead_type": "company",
+      "industry": "manufacturing",
+      "company": "Sotefin Bharat Ltd",
+      "contact_name": "Contact to identify (MD or head of operations)",
+      "email": null,
+      "phone": null,
+      "linkedin_url": "https://www.linkedin.com/company/sotefin-bharat",
+      "what_happened": "Kolkata maker of automated car parking systems (part of Sotefin SA, Switzerland). SME IPO of Rs 89.76 crore, open 16-20 July 2026. Stated use of funds includes setting up a manufacturing facility in Kolkata, West Bengal.",
+      "why_it_matters": "They said in public that they are building a factory. Engineering units fit Lakhotia's 1-3 acre plots. If land is not fixed yet, this is the moment.",
+      "check_before_contact": "Whether land for the facility is already bought (see the prospectus).",
+      "sources": [
+        "https://www.deccanchronicle.com/business/market/sotefin-bharat-sme-ipo-from-july-16-1971044",
+        "https://www.sotefinbharat.com/wp-content/uploads/2026/07/Sotefin_Bharat_RHP-Final.pdf"
+      ],
+      "first_message": "Hi {first_name}, saw that Sotefin Bharat plans a new manufacturing facility in Kolkata after the IPO. If the site isn't final yet, Lakhotia Industrial Complex on Ranihati–Amta Road has freehold plots and helps with approvals. Worth a quick look?"
+    },
+    {
+      "id": "lux-cozi-dankuni-2026",
+      "kind": "lead",
+      "client": "Shree Heights",
+      "property_type": "flats",
+      "lead_type": "company",
+      "industry": "manufacturing",
+      "company": "Lux Industries Ltd (Lux Cozi)",
+      "contact_name": "Contact to identify (HR head)",
+      "email": "info@luxindustries.com",
+      "phone": "+91 33 49515151",
+      "linkedin_url": "https://www.linkedin.com/company/lux-industries-ltd",
+      "what_happened": "Foundation stone laid 11 July 2026 for a Rs 600 crore expansion at Dankuni, Hooghly: 12 lakh sq ft added, 20 lakh sq ft total. Expected 3,000 direct and 6,000 indirect jobs.",
+      "why_it_matters": "Staff moving for this plant will need homes. Shree Heights is in Chandannagar, the same district. One tie-up with HR can reach many buyers at once.",
+      "check_before_contact": "When the plant opens and how many staff will relocate.",
+      "sources": [
+        "https://www.financialexpress.com/india-news/rs-600-crore-game-changer-bengal-cm-suvendu-adhikari-unveils-20-lakh-sq-ft-mega-garment-hub-lux-cozi-plant-in-hooghly-9000-jobs-expected/4289315/",
+        "https://luxindustries.com/contact/"
+      ],
+      "first_message": "Hi {first_name}, read about the Dankuni expansion and the 3,000 new jobs. Shree Heights in Chandannagar has 2 and 3BHK homes that are almost ready. Would a home-buying offer for your Hooghly team be useful? Happy to set it up."
+    },
+    {
+      "id": "aiims-kalyani-faculty-2026",
+      "kind": "lead",
+      "client": "Vrindavan Greens",
+      "property_type": "plots",
+      "lead_type": "company",
+      "industry": "other",
+      "company": "AIIMS Kalyani",
+      "contact_name": "Contact to identify (staff welfare or administration)",
+      "email": "info@aiimskalyani.edu.in",
+      "phone": null,
+      "linkedin_url": null,
+      "what_happened": "AIIMS Kalyani notified 34 faculty posts (10 Professor, 4 Additional Professor, 1 Associate Professor, 19 Assistant Professor). Applications closed 26 July 2026.",
+      "why_it_matters": "New senior doctors join over the coming months, many from other cities. Vrindavan Greens' website lists AIIMS Kalyani as 15 minutes away.",
+      "check_before_contact": "Reach individual doctors on LinkedIn only after they have joined. Ask administration about a housing notice board.",
+      "sources": [
+        "https://aiimskalyani.edu.in/aiimsapi/uploads/documents/general/2nd_cut_off_notification_final_20260710_183947_92802623.pdf",
+        "https://www.indiascienceandtechnology.gov.in/organisations/centres-of-higher-learning/aiims/all-india-institute-medical-sciences-aiims-kalyani-west-bengal"
+      ],
+      "first_message": "Hi Dr {last_name}, congratulations on joining AIIMS Kalyani. If you're looking for a home nearby, Vrindavan Greens is a gated plotted community 15 minutes away at Madanpur. You buy the land and build your own house. Can I send the plot map?"
+    },
+    {
+      "id": "taratala-beverage-expansion-2026",
+      "kind": "needs_research",
+      "client": "Lakhotia",
+      "property_type": "industrial",
+      "company": null,
+      "what_happened": "Beverage plant expansion in Taratala, Kolkata. Rs 64.16 crore. Bottled water, juice and canned soft drinks.",
+      "why_it_matters": "A growing drinks plant inside the city runs out of room for storage and dispatch.",
+      "check_before_contact": "Company name is hidden on the free tracker page. Find it in pollution board or environmental clearance records.",
+      "sources": ["https://www.newprojectstracker.net/projects-india/west-bengal"]
+    },
+    {
+      "id": "wbidc-uluberia-park",
+      "kind": "competitor",
+      "client": "Lakhotia",
+      "company": "WBIDC Uluberia Industrial Park",
+      "what_happened": "State-run industrial park in Uluberia, Howrah, on NH-6. WBIDC has possession of 128.69 acres.",
+      "why_it_matters": "Same district and highway. Lakhotia should lead with freehold ownership, free plot advice and approvals help.",
+      "sources": ["https://www.wbidc.com/home/industrial-parks/uluberia-industrial-park"]
+    },
+    {
+      "id": "howrah-msme-park-8-76-acres",
+      "kind": "competitor",
+      "client": "Lakhotia",
+      "company": null,
+      "what_happened": "New MSME industrial park and warehouse on 8.76 acres in Howrah, Rs 14.63 crore. Developer name hidden.",
+      "why_it_matters": "Smaller park competing for the same SME buyers.",
+      "sources": ["https://www.newprojectstracker.net/projects-india/west-bengal"]
+    }
+  ]
+}
